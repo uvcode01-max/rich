@@ -4,6 +4,8 @@ import tempfile
 
 import pytest
 
+from rich.console import Console
+from rich.errors import MissingStyle
 from rich.style import Style
 from rich.theme import Theme, ThemeStack, ThemeStackError
 
@@ -51,3 +53,14 @@ def test_theme_stack():
     assert stack.get("warning") == Style.parse("red")
     with pytest.raises(ThemeStackError):
         stack.pop_theme()
+
+
+def test_use_theme_inherit():
+    console = Console()
+    theme = Theme({"warning": "red"}, inherit=False)
+    with console.use_theme(theme, inherit=False):
+        with pytest.raises(MissingStyle):
+            console.get_style("repr.number")
+
+    with console.use_theme(theme, inherit=True):
+        assert console.get_style("repr.number") is not None

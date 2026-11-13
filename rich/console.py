@@ -343,7 +343,7 @@ class ThemeContext:
         self.inherit = inherit
 
     def __enter__(self) -> "ThemeContext":
-        self.console.push_theme(self.theme)
+        self.console.push_theme(self.theme, inherit=self.inherit)
         return self
 
     def __exit__(
